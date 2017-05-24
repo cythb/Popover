@@ -26,7 +26,7 @@
 
 import Foundation
 
-public final class PopoverItem {
+public final class PopoverItem : NSObject {
     public let title: String
     public let titleColor: UIColor
     public let image: UIImage?

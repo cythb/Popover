@@ -81,6 +81,12 @@ open class PopoverView: UIView {
         let count = self.items.count > MaxRowCount ? MaxRowCount : self.items.count
         return CGFloat(count) * RowHeight
     }()
+    
+    public var seperatorColor: UIColor? {
+        didSet {
+            self.tableView.separatorColor = seperatorColor
+        }
+    }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -267,6 +273,109 @@ open class PopoverView: UIView {
                 constant: -constant1 / 2.0
             ),            
         ])
+    }
+    
+    func addConstraints(offset : CGFloat) {
+        let screenWidth: CGFloat = superview!.frame.width
+        var centerX: CGFloat = fromView.frame.origin.x + fromView.bounds.width / 2.0
+        let rightHand = centerX - screenWidth / 2.0 > 0
+        if rightHand {
+            centerX = screenWidth - centerX
+        }
+        
+        var constant0: CGFloat = 0
+        let distance = centerX - (tableViewWidth / 2.0 + 6)
+        if distance <= 0 {
+            constant0 = rightHand ? distance : -distance
+        }
+        
+        var attribute0: NSLayoutAttribute = .top
+        var attribute1: NSLayoutAttribute = .bottom
+        var constant1: CGFloat = 10
+        
+        if direction == .up {
+            attribute0 = .bottom
+            attribute1 = .top
+            constant1 = -10
+        }
+        
+        commonSuperView.addConstraints([
+            NSLayoutConstraint(
+                item: tableView,
+                attribute: .centerX,
+                relatedBy: .equal,
+                toItem: fromView,
+                attribute: .centerX,
+                multiplier: 1,
+                constant: constant0
+            ),
+            NSLayoutConstraint(
+                item: tableView,
+                attribute: attribute0,
+                relatedBy: .equal,
+                toItem: fromView,
+                attribute: attribute1,
+                multiplier: 1,
+                constant: constant1 + offset
+            ),
+            NSLayoutConstraint(
+                item: tableView,
+                attribute: .width,
+                relatedBy: .equal,
+                toItem: nil,
+                attribute: .notAnAttribute,
+                multiplier: 1,
+                constant: tableViewWidth
+            ),
+            NSLayoutConstraint(
+                item: tableView,
+                attribute: .height,
+                relatedBy: .equal,
+                toItem: nil,
+                attribute: .notAnAttribute,
+                multiplier: 1,
+                constant: tableViewHeight
+            )
+            ])
+        
+        commonSuperView.addConstraints([
+            NSLayoutConstraint(
+                item: arrawView,
+                attribute: .width,
+                relatedBy: .equal,
+                toItem: tableView,
+                attribute: .width,
+                multiplier: 1,
+                constant: LineWidth * 2
+            ),
+            NSLayoutConstraint(
+                item: arrawView,
+                attribute: .height,
+                relatedBy: .equal,
+                toItem: tableView,
+                attribute: .height,
+                multiplier: 1,
+                constant: fabs(constant1) - 2
+            ),
+            NSLayoutConstraint(
+                item: arrawView,
+                attribute: .centerX,
+                relatedBy: .equal,
+                toItem: tableView,
+                attribute: .centerX,
+                multiplier: 1,
+                constant: 0
+            ),
+            NSLayoutConstraint(
+                item: arrawView,
+                attribute: .centerY,
+                relatedBy: .equal,
+                toItem: tableView,
+                attribute: .centerY,
+                multiplier: 1,
+                constant: -constant1 / 2.0
+            ),
+            ])
     }
     
 #if DEBUG

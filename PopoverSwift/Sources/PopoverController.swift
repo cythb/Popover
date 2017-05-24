@@ -26,7 +26,7 @@
 
 import UIKit
 
-public final class PopoverController {
+public final class PopoverController : NSObject {
     internal let items: [PopoverItem]
     internal let fromView: UIView
     internal let direction: Direction
@@ -48,6 +48,8 @@ public final class PopoverController {
             }
         }
     }
+    
+    public var seperatorColor: UIColor = UIColor.white
     
     public init(
         items: [PopoverItem],

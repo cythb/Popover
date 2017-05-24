@@ -68,6 +68,48 @@ public extension UIViewController {
         popoverView.addConstraints()        
     }
     
+    public func popover(_ controller: PopoverController, offset: CGFloat) {
+        func assertFromView(_ fromView: UIView) {
+            var view: UIView? = fromView
+            while (nil != view) {
+                if view == view {
+                    return
+                } else {
+                    view = view?.superview
+                }
+            }
+            
+            fatalError("fromView: \(fromView) must be descendant of self.view")
+        }
+        
+        assertFromView(controller.fromView)
+        
+        let popoverView = PopoverView(controller, commonSuperView: view)
+        popoverView.seperatorColor = controller.seperatorColor
+        popoverView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(popoverView)
+        self.popoverView = popoverView
+        
+        view.addConstraints(
+            NSLayoutConstraint.constraints(
+                withVisualFormat: "|[popoverView]|",
+                options: NSLayoutFormatOptions(),
+                metrics: nil,
+                views: ["popoverView": popoverView]
+            )
+        )
+        view.addConstraints(
+            NSLayoutConstraint.constraints(
+                withVisualFormat: "V:|[popoverView]|",
+                options: NSLayoutFormatOptions(),
+                metrics: nil,
+                views: ["popoverView": popoverView]
+            )
+        )
+        
+        popoverView.addConstraints(offset: offset)
+    }
+    
     public func dismissPopover() {
         self.popoverView?.dismiss()
     }

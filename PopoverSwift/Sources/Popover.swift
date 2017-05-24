@@ -35,11 +35,13 @@ let MaxRowCount = 7
 let LineWidth: CGFloat = 1
 let CornerRadius: CGFloat = 6
 
-public enum Direction {
+@objc
+public enum Direction : Int {
     case up, down
 }
 
-public enum PopoverStyle {
+@objc
+public enum PopoverStyle : Int {
     case normal, withImage
 }
 
